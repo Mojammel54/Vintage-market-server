@@ -24,12 +24,27 @@ async function run() {
     try {
 
         const userCollection = client.db("VINTAGE-RESALE-MARKET").collection("user");
+        const productCollection = client.db("VINTAGE-RESALE-MARKET").collection("product");
 
         app.post('/users', async (req, res) => {
 
 
             const users = req.body
             const result = await userCollection.insertOne(users)
+            res.send(result)
+
+
+
+
+        })
+
+        //addproducts
+
+        app.post('/products', async (req, res) => {
+
+
+            const users = req.body
+            const result = await productCollection.insertOne(users)
             res.send(result)
 
 
