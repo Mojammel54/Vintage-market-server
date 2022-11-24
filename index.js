@@ -93,6 +93,37 @@ async function run() {
         })
 
 
+        //category wise
+
+
+        app.get('/category', async (req, res) => {
+
+
+            let query = {}
+
+            if (req.query.category) {
+
+                query = {
+
+
+                    category: req.query.category
+
+
+
+                }
+            }
+
+
+            const cursor = productCollection.find(query)
+            const review = await cursor.sort({ date: -1 }).toArray();
+            res.send(review)
+
+
+
+
+        })
+
+
 
     }
 
