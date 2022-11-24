@@ -123,6 +123,20 @@ async function run() {
 
         })
 
+              //specific item naoa
+
+              app.get('/categoryname', async (req, res) => {
+
+                const query = {}
+                const result = await productCollection.find(query).project({ category: 1 }).toArray();
+                res.send(result)
+    
+    
+    
+    
+    
+            })
+
 
 
     }
