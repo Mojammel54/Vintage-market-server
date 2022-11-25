@@ -26,6 +26,19 @@ async function run() {
         const userCollection = client.db("VINTAGE-RESALE-MARKET").collection("user");
         const productCollection = client.db("VINTAGE-RESALE-MARKET").collection("product");
         const categoryCollection = client.db("VINTAGE-RESALE-MARKET").collection("categorycollection");
+        const bookinigCollection = client.db("VINTAGE-RESALE-MARKET").collection("booking");
+
+        app.post('/users', async (req, res) => {
+
+
+            const users = req.body
+            const result = await userCollection.insertOne(users)
+            res.send(result)
+
+
+
+
+        })
 
         app.post('/users', async (req, res) => {
 
@@ -52,6 +65,22 @@ async function run() {
 
 
         })
+
+        //add bookings
+
+
+        app.post('/booking', async (req, res) => {
+
+            const users = req.body
+            const result = await bookinigCollection.insertOne(users)
+            res.send(result)
+
+
+
+
+        })
+
+
 
         app.get('/allusers', async (req, res) => {
 
