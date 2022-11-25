@@ -319,6 +319,31 @@ async function run() {
 
         })
 
+        //verified
+
+
+        app.put('/verify/:id', async (req, res) => {
+
+
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+
+                $set: {
+
+                    status: 'verified'
+                }
+
+
+            }
+
+            const result = await userCollection.updateOne(filter, updatedDoc, options)
+            res.send(result)
+
+
+        })
+
 
 
 
