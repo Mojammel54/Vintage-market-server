@@ -218,6 +218,24 @@ async function run() {
         })
 
 
+        //sellers
+
+        app.get('/sellers', async (req, res) => {
+
+
+
+
+            const role = req.query.role;
+            const query = {
+                role: role
+            };
+            const booking = await userCollection.find(query).toArray()
+            res.send(booking)
+
+
+        })
+
+
 
     }
 
