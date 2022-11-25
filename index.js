@@ -155,20 +155,18 @@ async function run() {
 
 
 
-        //product by email
-
 
         app.get('/myproduct', async (req, res) => {
 
 
             let query = {}
 
-            if (req.query.emal) {
+            if (req.query.email) {
 
                 query = {
 
 
-                    selleremail: req.query.email
+                    sellerEmail: req.query.email
 
 
 
@@ -184,7 +182,6 @@ async function run() {
 
 
         })
-
 
         //bookings
 
@@ -234,6 +231,8 @@ async function run() {
 
 
         })
+
+
 
 
 
