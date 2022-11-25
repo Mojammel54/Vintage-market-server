@@ -1,12 +1,14 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express');
+require('dotenv').config();
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express()
 const port = process.env.PORT || 5000;
 
-require('dotenv').config();
+
+
 //middlewares
 app.use(cors())
 app.use(express.json())
@@ -27,6 +29,7 @@ async function run() {
         const productCollection = client.db("VINTAGE-RESALE-MARKET").collection("product");
         const categoryCollection = client.db("VINTAGE-RESALE-MARKET").collection("categorycollection");
         const bookinigCollection = client.db("VINTAGE-RESALE-MARKET").collection("booking");
+        const paymentcollection = client.db("VINTAGE-RESALE-MARKET").collection("payment");
 
         app.post('/users', async (req, res) => {
 
@@ -242,6 +245,63 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const booking = await bookinigCollection.findOne(query)
             res.send(booking)
+
+
+        })
+
+        //payment
+
+
+        app.post('/create-payment-intent', async (req, res) => {
+
+            const payment = req.body;
+
+            const price = payment.productprice;
+            const amount = price * 100;
+
+            const paymentIntent = await stripe.paymentIntents.create({
+
+                currency: 'usd',
+                amount: amount,
+                "payment_method_types": [
+                    "card"
+                ],
+
+
+            })
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+
+
+
+        })
+
+
+        app.post('/payments', async (req, res) => {
+
+            const payment = req.body
+            const result = await paymentcollection.insertOne(payment)
+            const id = payment.payId;
+            const filter = { _id: ObjectId(id) }
+            const updatedDoc = {
+
+                $set: {
+
+                    paid: true,
+                    transectionId: payment.transectionId
+
+
+                }
+
+
+            }
+
+            const updatedReslut = await bookinigCollection.updateOne(filter, updatedDoc)
+            const updatestatus = await productCollection.updateOne(filter, updatedDoc)
+            res.send(result)
+
 
 
         })
