@@ -299,7 +299,20 @@ async function run() {
             }
 
             const updatedReslut = await bookinigCollection.updateOne(filter, updatedDoc)
-            const updatestatus = await productCollection.updateOne(filter, updatedDoc)
+            // const updatestatus = await productCollection.updateOne(filter, updatedDoc)
+            res.send(result)
+
+
+
+        })
+
+
+        app.delete('/deluser/:id', async (req, res) => {
+
+
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await userCollection.deleteOne(query)
             res.send(result)
 
 
