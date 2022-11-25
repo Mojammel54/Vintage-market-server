@@ -186,6 +186,23 @@ async function run() {
         })
 
 
+        //bookings
+
+
+        app.get('/bookings', async (req, res) => {
+
+
+
+            // console.log('token inside jwt', req.headers.authorization)
+            const email = req.query.email;
+            const query = { email: email };
+            const booking = await bookinigCollection.find(query).toArray()
+            res.send(booking)
+
+
+        })
+
+
         //specific item naoa
 
         app.get('/categoryname', async (req, res) => {
