@@ -25,6 +25,7 @@ async function run() {
 
         const userCollection = client.db("VINTAGE-RESALE-MARKET").collection("user");
         const productCollection = client.db("VINTAGE-RESALE-MARKET").collection("product");
+        const categoryCollection = client.db("VINTAGE-RESALE-MARKET").collection("categorycollection");
 
         app.post('/users', async (req, res) => {
 
@@ -123,19 +124,52 @@ async function run() {
 
         })
 
-              //specific item naoa
 
-              app.get('/categoryname', async (req, res) => {
 
-                const query = {}
-                const result = await productCollection.find(query).project({ category: 1 }).toArray();
-                res.send(result)
-    
-    
-    
-    
-    
-            })
+        //product by email
+
+
+        app.get('/myproduct', async (req, res) => {
+
+
+            let query = {}
+
+            if (req.query.emal) {
+
+                query = {
+
+
+                    selleremail: req.query.email
+
+
+
+                }
+            }
+
+
+            const cursor = productCollection.find(query)
+            const review = await cursor.sort({ date: -1 }).toArray();
+            res.send(review)
+
+
+
+
+        })
+
+
+        //specific item naoa
+
+        app.get('/categoryname', async (req, res) => {
+
+            const query = {}
+            const result = await categoryCollection.find(query).toArray();
+            res.send(result)
+
+
+
+
+
+        })
 
 
 
