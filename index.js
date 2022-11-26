@@ -105,7 +105,18 @@ async function run() {
 
         //addproducts
 
-        app.post('/products', async (req, res) => {
+        app.post('/products',verifyJWT, async (req, res) => {
+
+            const decodedEmail = req.decoded.email
+            const query = { email: decodedEmail }
+            const user = await userCollection.findOne(query)
+
+            if (user.role !== 'seller') {
+
+
+                return res.status(403).send({ message: 'forbidden access' })
+
+            }
 
 
             const users = req.body
@@ -389,10 +400,32 @@ async function run() {
 
         })
 
+
+        //deleteproduct
+
+
+        app.delete('/delproduct/:id', async (req, res) => {
+
+
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const result = await productCollection.deleteOne(query)
+            res.send(result)
+
+
+
+        })
+
+
+
         //verified
 
 
         app.put('/verify/:id', async (req, res) => {
+
+
+
+
 
 
             const id = req.params.id
