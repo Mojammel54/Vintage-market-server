@@ -105,7 +105,7 @@ async function run() {
 
         //addproducts
 
-        app.post('/products',verifyJWT, async (req, res) => {
+        app.post('/products', verifyJWT, async (req, res) => {
 
             const decodedEmail = req.decoded.email
             const query = { email: decodedEmail }
@@ -194,6 +194,8 @@ async function run() {
         //category wise
 
 
+
+
         app.get('/category', async (req, res) => {
 
 
@@ -210,6 +212,8 @@ async function run() {
 
                 }
             }
+
+
 
 
             const cursor = productCollection.find(query)
@@ -380,7 +384,7 @@ async function run() {
             }
 
             const updatedReslut = await bookinigCollection.updateOne(filter, updatedDoc)
-            // const updatestatus = await productCollection.updateOne(filter, updatedDoc)
+            const product = await productCollection.updateOne(filter, updatedDoc,)
             res.send(result)
 
 
@@ -402,6 +406,22 @@ async function run() {
 
 
         //deleteproduct
+
+
+        // app.delete('/paydel/:id', async (req, res) => {
+
+
+        //     const id = req.params.id
+        //     const query = { _id: ObjectId(id) }
+        //     const result = await productCollection.deleteOne(query)
+        //     res.send(result)
+
+
+
+        // })
+
+
+
 
 
         app.delete('/delproduct/:id', async (req, res) => {
@@ -444,6 +464,32 @@ async function run() {
             const result = await userCollection.updateOne(filter, updatedDoc, options)
             // const product = await productCollection.updateOne(filter, updatedDoc, options)
             res.send(result)
+
+
+        })
+
+
+
+        app.put('/paid/:id', async (req, res) => {
+
+
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+
+                $set: {
+
+                    status: 'sold'
+                }
+
+
+            }
+
+
+            const product = await productCollection.updateOne(filter, updatedDoc, options)
+            res.send(product)
+
 
 
         })
