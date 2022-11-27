@@ -176,6 +176,7 @@ async function run() {
 
         app.get('/allproducts', async (req, res) => {
 
+         
             const query = {}
             const cursor = productCollection.find(query)
             const users = await cursor.toArray();
@@ -298,7 +299,7 @@ async function run() {
 
             }
 
-         
+
             const email = req.query.email;
             const query = { email: email };
             const booking = await bookinigCollection.find(query).toArray()
@@ -483,7 +484,14 @@ async function run() {
 
 
 
-        app.put('/advertise/:id', async (req, res) => {
+        app.put('/advertise/:id', verifyJWT, async (req, res) => {
+            const decoded = req.decoded;
+
+            if (decoded.email !== req.query.email) {
+
+                res.status(403).send({ mesage: 'unauthorized access' })
+
+            }
 
             const id = req.params.id
             const filter = { _id: ObjectId(id) }
@@ -494,6 +502,34 @@ async function run() {
 
 
                     isadvertise: true
+                }
+
+
+            }
+
+            const result = await productCollection.updateOne(filter, updatedDoc, options)
+
+            res.send(result)
+
+
+        })
+
+
+
+
+        //reported
+
+        app.put('/reported/:id', async (req, res) => {
+
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+
+                $set: {
+
+
+                    reported: true
                 }
 
 
