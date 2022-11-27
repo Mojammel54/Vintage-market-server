@@ -63,6 +63,7 @@ async function run() {
         const categoryCollection = client.db("VINTAGE-RESALE-MARKET").collection("categorycollection");
         const bookinigCollection = client.db("VINTAGE-RESALE-MARKET").collection("booking");
         const paymentcollection = client.db("VINTAGE-RESALE-MARKET").collection("payment");
+        const advertisecollection = client.db("VINTAGE-RESALE-MARKET").collection("advertise");
 
 
 
@@ -143,11 +144,40 @@ async function run() {
         })
 
 
+        //advertise
+
+
+        app.post('/advertise', async (req, res) => {
+
+            const users = req.body
+            const result = await advertisecollection.insertOne(users)
+            res.send(result)
+
+
+
+
+        })
+
+
 
         app.get('/allusers', async (req, res) => {
 
             const query = {}
             const cursor = userCollection.find(query)
+            const users = await cursor.toArray();
+            res.send(users)
+
+
+
+
+        })
+
+        //allProducts
+
+        app.get('/allproducts', async (req, res) => {
+
+            const query = {}
+            const cursor = productCollection.find(query)
             const users = await cursor.toArray();
             res.send(users)
 
@@ -286,11 +316,9 @@ async function run() {
             const result = await categoryCollection.find(query).toArray();
             res.send(result)
 
-
-
-
-
         })
+
+
 
 
         //sellers
@@ -405,20 +433,7 @@ async function run() {
         })
 
 
-        //deleteproduct
 
-
-        // app.delete('/paydel/:id', async (req, res) => {
-
-
-        //     const id = req.params.id
-        //     const query = { _id: ObjectId(id) }
-        //     const result = await productCollection.deleteOne(query)
-        //     res.send(result)
-
-
-
-        // })
 
 
 
@@ -441,12 +456,7 @@ async function run() {
         //verified
 
 
-        app.put('/verify/:id', async (req, res) => {
-
-
-
-
-
+        app.put('/advertise/:id', async (req, res) => {
 
             const id = req.params.id
             const filter = { _id: ObjectId(id) }
@@ -455,18 +465,21 @@ async function run() {
 
                 $set: {
 
-                    status: 'verified'
+
+                    isadvertise: true
                 }
 
 
             }
 
-            const result = await userCollection.updateOne(filter, updatedDoc, options)
-            // const product = await productCollection.updateOne(filter, updatedDoc, options)
+            const result = await productCollection.updateOne(filter, updatedDoc, options)
+
             res.send(result)
 
 
         })
+
+
 
 
 
@@ -488,6 +501,7 @@ async function run() {
 
 
             const product = await productCollection.updateOne(filter, updatedDoc, options)
+
             res.send(product)
 
 
@@ -495,6 +509,35 @@ async function run() {
         })
 
 
+
+
+        //advrtise true
+
+
+        app.put('/advertise/:id', async (req, res) => {
+
+
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+
+                $set: {
+
+                    status: 'sold'
+                }
+
+
+            }
+
+
+            const product = await productCollection.updateOne(filter, updatedDoc, options)
+
+            res.send(product)
+
+
+
+        })
 
 
 
