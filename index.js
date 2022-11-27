@@ -298,7 +298,7 @@ async function run() {
 
             }
 
-            // console.log('token inside jwt', req.headers.authorization)
+         
             const email = req.query.email;
             const query = { email: email };
             const booking = await bookinigCollection.find(query).toArray()
@@ -456,6 +456,33 @@ async function run() {
         //verified
 
 
+        app.put('/verify/:id', async (req, res) => {
+
+            const id = req.params.id
+            const filter = { _id: ObjectId(id) }
+            const options = { upsert: true };
+            const updatedDoc = {
+
+                $set: {
+
+                    status: 'verified'
+                }
+
+
+            }
+
+
+            const seller = await userCollection.updateOne(filter, updatedDoc, options)
+
+            res.send(seller)
+
+
+        })
+
+
+
+
+
         app.put('/advertise/:id', async (req, res) => {
 
             const id = req.params.id
@@ -514,30 +541,30 @@ async function run() {
         //advrtise true
 
 
-        app.put('/advertise/:id', async (req, res) => {
+        // app.put('/advertise/:id', async (req, res) => {
 
 
-            const id = req.params.id
-            const filter = { _id: ObjectId(id) }
-            const options = { upsert: true };
-            const updatedDoc = {
+        //     const id = req.params.id
+        //     const filter = { _id: ObjectId(id) }
+        //     const options = { upsert: true };
+        //     const updatedDoc = {
 
-                $set: {
+        //         $set: {
 
-                    status: 'sold'
-                }
-
-
-            }
+        //             status: 'sold'
+        //         }
 
 
-            const product = await productCollection.updateOne(filter, updatedDoc, options)
-
-            res.send(product)
+        //     }
 
 
+        //     const product = await productCollection.updateOne(filter, updatedDoc, options)
 
-        })
+        //     res.send(product)
+
+
+
+        // })
 
 
 
