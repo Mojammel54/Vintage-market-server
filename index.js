@@ -176,7 +176,7 @@ async function run() {
 
         app.get('/allproducts', async (req, res) => {
 
-         
+
             const query = {}
             const cursor = productCollection.find(query)
             const users = await cursor.toArray();
@@ -487,9 +487,14 @@ async function run() {
         app.put('/advertise/:id', verifyJWT, async (req, res) => {
             const decoded = req.decoded;
 
-            if (decoded.email !== req.query.email) {
+            const decodedEmail = req.decoded.email
+            const query = { email: decodedEmail }
+            const user = await userCollection.findOne(query)
 
-                res.status(403).send({ mesage: 'unauthorized access' })
+            if (user.role !== 'seller') {
+
+
+                return res.status(403).send({ message: 'forbidden access' })
 
             }
 
@@ -509,7 +514,7 @@ async function run() {
 
             const result = await productCollection.updateOne(filter, updatedDoc, options)
 
-            res.send(result)
+            return res.send(result)
 
 
         })
